@@ -19,7 +19,7 @@ app.get("/confirm", (req, res) => {
 	res.json(ConfirmResponse);
 });
 
-app.listen(port, () => {
+app.listen(process.env.PORT || port, () => {
 	console.log(`Example app listening on port ${port}`);
 });
 
