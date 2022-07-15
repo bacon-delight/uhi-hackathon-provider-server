@@ -1,0 +1,95 @@
+{
+	"context": {
+		"domain": "nic2004:85111",
+		"country": "IND",
+		"city": "std:080",
+		"action": "on_search",
+		"timestamp": "2022-07-14T08:05:55.252760Z",
+		"core_version": "0.7.1",
+		"consumer_id": "eua-nha",
+		"consumer_uri": "https://webhook.site/a612cc14-d8e4-4b02-9454-b84c93156d19",
+		"provider_id": "http://100.96.9.171:8084/api/v1",
+		"provider_uri": "http://100.96.9.171:8084/api/v1",
+		"transaction_id": "c8f9ad70-034b-11ed-a6d6-c13d491ee158",
+		"message_id": "c8f9ad70-034b-11ed-a6d6-c13d491ee158"
+	},
+	"message": {
+		"catalog": {
+			"descriptor": {
+				"name": "HSPA"
+			},
+			"items": [
+				{
+					"id": "0",
+					"descriptor": {
+						"name": "Consultation"
+					},
+					"fulfillment_id": "2a178c00-bdd1-4664-9f97-fca6ac88f3ab"
+				},
+				{
+					"id": "1",
+					"descriptor": {
+						"name": "Consultation"
+					},
+					"fulfillment_id": "e22d9b9c-0e8f-46ce-8213-203e5e9172d0"
+				}
+			],
+			"fulfillments": [
+				{
+					"id": "2a178c00-bdd1-4664-9f97-fca6ac88f3ab",
+					"type": "DIGITAL-CONSULTATION",
+					"agent": {
+						"id": "ganeshborse@hpr.ndhm",
+						"name": "ganeshborse@hpr.ndhm - Ganesh Vikram Borse",
+						"gender": "M"
+					},
+					"start": {
+						"time": {
+							"timestamp": "2022-07-14T13:15:00"
+						}
+					},
+					"end": {
+						"time": {
+							"timestamp": "2022-07-14T13:30:00"
+						}
+					},
+					"tags": {
+						"@abdm/gov.in/slot": "2a178c00-bdd1-4664-9f97-fca6ac88f3ab"
+					},
+					"quote": {
+						"price": {
+							"currency": "INR"
+						}
+					}
+				},
+				{
+					"id": "e22d9b9c-0e8f-46ce-8213-203e5e9172d0",
+					"type": "DIGITAL-CONSULTATION",
+					"agent": {
+						"id": "ganeshborse@hpr.ndhm",
+						"name": "ganeshborse@hpr.ndhm - Ganesh Vikram Borse",
+						"gender": "M"
+					},
+					"start": {
+						"time": {
+							"timestamp": "2022-07-14T13:30:00"
+						}
+					},
+					"end": {
+						"time": {
+							"timestamp": "2022-07-14T13:45:00"
+						}
+					},
+					"tags": {
+						"@abdm/gov.in/slot": "e22d9b9c-0e8f-46ce-8213-203e5e9172d0"
+					},
+					"quote": {
+						"price": {
+							"currency": "INR"
+						}
+					}
+				}
+			]
+		}
+	}
+}
