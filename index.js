@@ -7,7 +7,11 @@ const InitResponse = require("./mocks/init.json");
 const ConfirmResponse = require("./mocks/init.json");
 const SearchResponse = require("./mocks/init.json");
 
-app.get("/search", (req, res) => {
+app.get("/hspa/search", (req, res) => {
+	res.json(SearchResponse);
+});
+
+app.get("/eua/onsearch", (req, res) => {
 	res.json(SearchResponse);
 });
 
