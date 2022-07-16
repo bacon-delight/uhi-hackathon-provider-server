@@ -12,6 +12,7 @@ const searchResponse = require("../mocks/eua.search.json");
 const euaSOSCollection = euaDatabase.collection("sos");
 
 module.exports = async function (request, response) {
+	searchResponse.context.action = "on_search";
 	searchResponse.context.message_id = uuid.v4();
 	searchResponse.context.transaction_id = uuid.v4();
 	searchResponse.context.timestamp = new Date();
