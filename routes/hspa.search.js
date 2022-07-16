@@ -1,4 +1,5 @@
 const uuid = require("uuid");
+const axios = require("axios");
 
 // MongoDB
 const mongo = require("../mongo");
@@ -43,11 +44,24 @@ module.exports = async function (request, response) {
 	});
 	searchResponse.message.catalog.locations = locations.locations;
 
+	let status = null;
+	const uhiRequest = await axios
+		.post("http://121.242.73.120:8083/api/v1/on_search", searchResponse, {
+			"X-Gateway-Authorization": "value",
+		})
+		.then((response) => {
+			status = "broadcasted";
+		})
+		.catch((error) => {
+			status = "broadcasted_failed";
+		});
+
 	// Respond
 	await hspaSearchCollection.insertOne({
 		_id: searchResponse.context.transaction_id,
 		request: request.body,
 		response: searchResponse,
+		status: status,
 	});
 	response.json(searchResponse);
 };
