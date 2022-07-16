@@ -6,7 +6,7 @@ const port = 3000;
 // Mocks
 const InitResponse = require("./mocks/init.json");
 const ConfirmResponse = require("./mocks/init.json");
-const SearchResponse = require("./mocks/init.json");
+const searchResponse = require("./mocks/init.json");
 
 // MongoDB
 const mongo = require("./mongo");
@@ -14,17 +14,45 @@ const hspaDatabase = mongo.db("hspa");
 const euaDatabase = mongo.db("eua");
 
 // Collections
+const hspaProviderDetailsCollection =
+	hspaDatabase.collection("provider_details");
 const hspaSearchCollection = hspaDatabase.collection("search");
 const euaOnSearchCollection = euaDatabase.collection("onSearch");
 
 app.post("/hspa/search", async (request, response) => {
+	const context = await hspaProviderDetailsCollection.findOne({
+		_id: "context",
+	});
+	searchResponse.context = context.context;
+	const descriptor = await hspaProviderDetailsCollection.findOne({
+		_id: "descriptor",
+	});
+	searchResponse.message.catalog.descriptor = descriptor.descriptor;
+	const fulfillments = await hspaProviderDetailsCollection.findOne({
+		_id: "fulfillments",
+	});
+	searchResponse.message.catalog.fulfillments = fulfillments.fulfillments;
+	const services = await hspaProviderDetailsCollection.findOne({
+		_id: "services",
+	});
+	searchResponse.message.catalog.items = services.services;
+	const payments = await hspaProviderDetailsCollection.findOne({
+		_id: "services",
+	});
+	searchResponse.message.catalog.payments = payments.payments;
+	const locations = await hspaProviderDetailsCollection.findOne({
+		_id: "locations",
+	});
+	searchResponse.message.catalog.locations = locations.locations;
+
+	// Respond
 	await hspaSearchCollection.insertOne(request.body);
-	response.json(SearchResponse);
+	response.json(searchResponse);
 });
 
 app.post("/eua/onsearch", async (request, response) => {
 	await euaOnSearchCollection.insertOne(request.body);
-	response.json(SearchResponse);
+	response.json(searchResponse);
 });
 
 app.get("/init", (req, res) => {
