@@ -1,0 +1,37 @@
+{
+	"context": {
+		"domain": "nic2004:85111",
+		"country": "IND",
+		"city": "std:080",
+		"action": "search",
+		"timestamp": "",
+		"core_version": "0.7.1",
+		"consumer_id": "Karkinos.in-EUA",
+		"consumer_uri": "https://uhi-hackathon-provider-server.vercel.app/eua",
+		"transaction_id": "",
+		"message_id": ""
+	},
+	"message": {
+		"intent": {
+			"fulfillment": {
+				"type": "EMERGENCY-PICKUP, DROP",
+				"start": {
+					"instructions": {
+						"long_desc": "",
+						"short_desc": ""
+					},
+					"contact": {
+						"tags": {
+							"@abdm/gov/in/lat": null,
+							"@abdm/gov/in/long": null
+						}
+					}
+				},
+				"tags": {
+					"@abdm/gov/in/bloodgroup": "",
+					"@abdm/gov/in/radius": 5
+				}
+			}
+		}
+	}
+}

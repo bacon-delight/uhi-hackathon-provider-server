@@ -30,10 +30,11 @@ module.exports = async function (request, response) {
 	});
 	searchResponse.message.catalog.descriptor = descriptor.descriptor;
 
-	const fulfillments = await hspaProviderDetailsCollection.findOne({
-		_id: "fulfillments",
-	});
-	searchResponse.message.catalog.fulfillments = fulfillments.fulfillments;
+	// const fulfillments = await hspaProviderDetailsCollection.findOne({
+	// 	_id: "fulfillments",
+	// });
+	searchResponse.message.catalog.fulfillments =
+		request.body.message.intent.fulfillment;
 
 	const services = await hspaProviderDetailsCollection.findOne({
 		_id: "services",

@@ -36,10 +36,8 @@ const euaSOS = require("./routes/eua.sos");
 app.post("/eua/sos", (request, response) => euaSOS(request, response));
 
 // EUA - Search
-app.post("/eua/onsearch", async (request, response) => {
-	await euaOnSearchCollection.insertOne(request.body);
-	response.json(searchResponse);
-});
+// const euaSearch = require("./routes/eua.search");
+// app.post("/eua/on_search", (request, response) => euaSearch(request, response));
 
 // app.get("/init", (req, res) => {
 // 	res.json(InitResponse);

@@ -6,7 +6,7 @@ const mongo = require("../mongo");
 const euaDatabase = mongo.db("eua");
 
 // Mocks
-const searchResponse = require("../mocks/eua.search.json");
+const searchResponse = require("../mocks/eua.sos.json");
 
 // Collections
 const euaSOSCollection = euaDatabase.collection("sos");
