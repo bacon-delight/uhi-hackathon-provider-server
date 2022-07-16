@@ -21,11 +21,15 @@ const euaOnSearchCollection = euaDatabase.collection("onSearch");
 const hspaSearch = require("./routes/hspa.search");
 app.post("/hspa/search", (request, response) => hspaSearch(request, response));
 
+// HSPA - Search
+const hspaInit = require("./routes/hspa.init");
+app.post("/hspa/init", (request, response) => hspaInit(request, response));
+
 // EUA - SOS
 const euaSOS = require("./routes/eua.sos");
 app.post("/eua/sos", (request, response) => euaSOS(request, response));
 
-// Others
+// EUA - SOS Search
 app.post("/eua/onsearch", async (request, response) => {
 	await euaOnSearchCollection.insertOne(request.body);
 	response.json(searchResponse);

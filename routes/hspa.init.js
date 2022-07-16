@@ -6,12 +6,12 @@ const mongo = require("../mongo");
 const hspaDatabase = mongo.db("hspa");
 
 // Mocks
-const searchResponse = require("../mocks/hspa.onsearch.json");
+const searchResponse = require("../mocks/hspa.oninit.json");
 
 // Collections
 const hspaProviderDetailsCollection =
 	hspaDatabase.collection("provider_details");
-const hspaSearchCollection = hspaDatabase.collection("search");
+const hspaInitCollection = hspaDatabase.collection("init");
 
 module.exports = async function (request, response) {
 	const context = await hspaProviderDetailsCollection.findOne({
@@ -24,34 +24,16 @@ module.exports = async function (request, response) {
 	searchResponse.context.consumer_id = request.body.context.consumer_id;
 	searchResponse.context.consumer_uri = request.body.context.consumer_uri;
 
-	const descriptor = await hspaProviderDetailsCollection.findOne({
-		_id: "descriptor",
-	});
-	searchResponse.message.catalog.descriptor = descriptor.descriptor;
-
-	const fulfillments = await hspaProviderDetailsCollection.findOne({
-		_id: "fulfillments",
-	});
-	searchResponse.message.catalog.fulfillments = fulfillments.fulfillments;
-
-	const services = await hspaProviderDetailsCollection.findOne({
-		_id: "services",
-	});
-	searchResponse.message.catalog.items = services.services;
-
-	const payments = await hspaProviderDetailsCollection.findOne({
-		_id: "services",
-	});
-	searchResponse.message.catalog.payments = payments.payments;
-
-	const locations = await hspaProviderDetailsCollection.findOne({
-		_id: "locations",
-	});
-	searchResponse.message.catalog.locations = locations.locations;
+	const requestMessage = request.body.message.order;
+	searchResponse.message.order = {
+		quote: searchResponse.message.order.quote,
+		payment: searchResponse.message.order.payment,
+		...requestMessage,
+	};
 
 	let status = null;
 	const uhiRequest = await axios
-		.post("http://121.242.73.120:8083/api/v1/on_search", searchResponse, {
+		.post(`${request.body.context.consumer_uri}/on_init`, searchResponse, {
 			"X-Gateway-Authorization": "value",
 		})
 		.then((response) => {
@@ -62,11 +44,12 @@ module.exports = async function (request, response) {
 		});
 
 	// Respond
-	await hspaSearchCollection.insertOne({
+	await hspaInitCollection.insertOne({
 		_id: searchResponse.context.transaction_id,
 		request: request.body,
 		response: searchResponse,
 		status: status,
 	});
+
 	response.json(searchResponse);
 };
