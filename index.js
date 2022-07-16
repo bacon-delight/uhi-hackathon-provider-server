@@ -1,4 +1,5 @@
 const express = require("express");
+const uuid = require("uuid");
 const app = express();
 app.use(express.json());
 const port = 3000;
@@ -24,6 +25,9 @@ app.post("/hspa/search", async (request, response) => {
 		_id: "context",
 	});
 	searchResponse.context = context.context;
+	searchResponse.context.message_id = uuid.v4();
+	searchResponse.context.transaction_id = uuid.v4();
+	searchResponse.context.timestamp = new Date();
 	const descriptor = await hspaProviderDetailsCollection.findOne({
 		_id: "descriptor",
 	});
@@ -46,7 +50,10 @@ app.post("/hspa/search", async (request, response) => {
 	searchResponse.message.catalog.locations = locations.locations;
 
 	// Respond
-	await hspaSearchCollection.insertOne(request.body);
+	await hspaSearchCollection.insertOne({
+		request: request.body,
+		response: searchResponse,
+	});
 	response.json(searchResponse);
 });
 
