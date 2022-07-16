@@ -1,8 +1,10 @@
 const express = require("express");
 const uuid = require("uuid");
 const app = express();
+const cors = require("cors");
+app.use(cors());
 app.use(express.json());
-const port = 3000;
+const port = 4000;
 
 // Mocks
 // const InitResponse = require("./mocks/init.json");
@@ -46,6 +48,13 @@ app.post("/eua/sos", (request, response) => euaSOS(request, response));
 // app.get("/confirm", (req, res) => {
 // 	res.json(ConfirmResponse);
 // });
+
+// -------------------------- UI --------------------------
+// HSPA - Search
+const hspaUISearch = require("./routes/hspa.ui.search");
+app.get("/hspa/ui/search", (request, response) =>
+	hspaUISearch(request, response)
+);
 
 // Run Server
 app.listen(process.env.PORT || port, () => {
