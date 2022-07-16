@@ -18,6 +18,7 @@ module.exports = async function (request, response) {
 		_id: "context",
 	});
 	searchResponse.context = context.context;
+	searchResponse.context.action = "on_search";
 	searchResponse.context.message_id = uuid.v4();
 	searchResponse.context.transaction_id = request.body.context.transaction_id;
 	searchResponse.context.timestamp = new Date();

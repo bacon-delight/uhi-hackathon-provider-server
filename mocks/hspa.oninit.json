@@ -36,12 +36,12 @@
 			},
 			"payment": [
 				{
-					"uri": "https://api.bpp.com/pay?amt=100&txn_id=ksh87yriuro34iyr3p4&mode=upi&vpa=doctor@upi",
+					"uri": "https://api.bpp.com/pay?amt=100&txn_id=ksh87yriuro34iyr3p4&mode=upi&karkinos@upi",
 					"type": "ON-ORDER",
 					"status": "NOT-PAID"
 				},
 				{
-					"uri": "https://api.bpp.com/pay?amt=100&txn_id=ksh87yriuro34iyr3p4&mode=upi&vpa=doctor@upi",
+					"uri": "https://api.bpp.com/pay?amt=100&txn_id=ksh87yriuro34iyr3p4&mode=upi&karkinos@upi",
 					"type": "ON-FULFILLMENT",
 					"status": "NOT-PAID"
 				}

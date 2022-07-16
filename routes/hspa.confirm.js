@@ -11,14 +11,14 @@ const searchResponse = require("../mocks/hspa.oninit.json");
 // Collections
 const hspaProviderDetailsCollection =
 	hspaDatabase.collection("provider_details");
-const hspaInitCollection = hspaDatabase.collection("init");
+const hspaConfirmCollection = hspaDatabase.collection("confirm");
 
 module.exports = async function (request, response) {
 	const context = await hspaProviderDetailsCollection.findOne({
 		_id: "context",
 	});
 	searchResponse.context = context.context;
-	searchResponse.context.action = "on_init";
+	searchResponse.context.action = "on_confirm";
 	searchResponse.context.message_id = uuid.v4();
 	searchResponse.context.transaction_id = request.body.context.transaction_id;
 	searchResponse.context.timestamp = new Date();
@@ -27,16 +27,31 @@ module.exports = async function (request, response) {
 
 	const requestMessage = request.body.message.order;
 	searchResponse.message.order = {
-		quote: searchResponse.message.order.quote,
-		payment: searchResponse.message.order.payment,
+		state: "CONFIRMED",
+		payment: {
+			uri: `https://api.bpp.com/pay?amt=${request.body.message.order.quote.price.value}&txn_id=${request.body.context.transaction_id}&mode=upi&karkinos@upi`,
+			type: "ON-FULFILLMENT",
+			status: "NOT-PAID",
+			tl_method: "http/get",
+			params: {
+				transaction_id: request.body.context.transaction_id,
+				amount: request.body.message.order.quote.price.value,
+				mode: "UPI",
+				vpa: "karkinos@upi",
+			},
+		},
 		...requestMessage,
 	};
 
 	let status = null;
 	const uhiRequest = await axios
-		.post(`${request.body.context.consumer_uri}/on_init`, searchResponse, {
-			"X-Gateway-Authorization": "value",
-		})
+		.post(
+			`${request.body.context.consumer_uri}/on_confirm`,
+			searchResponse,
+			{
+				"X-Gateway-Authorization": "value",
+			}
+		)
 		.then((response) => {
 			status = "broadcasted";
 		})
@@ -45,7 +60,7 @@ module.exports = async function (request, response) {
 		});
 
 	// Respond
-	await hspaInitCollection.insertOne({
+	await hspaConfirmCollection.insertOne({
 		_id: searchResponse.context.transaction_id,
 		request: request.body,
 		response: searchResponse,
