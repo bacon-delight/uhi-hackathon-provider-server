@@ -15,13 +15,17 @@ const hspaSearchCollection = hspaDatabase.collection("search");
 
 module.exports = async function (request, response) {
 	// Not Serviced
+	const fulfillments = await hspaProviderDetailsCollection.findOne({
+		_id: "fulfillments",
+	});
+	let fulfillment = [];
 	if (
-		!(
-			request.body.message?.intent?.fulfillment?.type ===
-				"EMERGENCY-PICKUP" ||
-			request.body.message?.intent?.fulfillment?.type === "DROP"
-		)
+		request.body.message?.intent?.fulfillment?.type === "EMERGENCY-PICKUP"
 	) {
+		fulfillment = fulfillments.fulfillments_pickup;
+	} else if (request.body.message?.intent?.fulfillment?.type === "DROP") {
+		fulfillment = fulfillments.fulfillments_drop;
+	} else {
 		response.json({ accepted: false, reason: "not_serviced" });
 	}
 
@@ -44,8 +48,7 @@ module.exports = async function (request, response) {
 	searchResponse.message.catalog.descriptor = descriptor.descriptor;
 
 	// Fulfillments
-	searchResponse.message.catalog.fulfillments =
-		request.body.message.intent.fulfillment;
+	searchResponse.message.catalog.fulfillments = fulfillment;
 
 	const services = await hspaProviderDetailsCollection.findOne({
 		_id: "services",
@@ -56,11 +59,6 @@ module.exports = async function (request, response) {
 		_id: "services",
 	});
 	searchResponse.message.catalog.payments = payments.payments;
-
-	const locations = await hspaProviderDetailsCollection.findOne({
-		_id: "locations",
-	});
-	searchResponse.message.catalog.locations = locations.locations;
 
 	let status = null;
 	const uhiRequest = await axios
