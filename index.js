@@ -56,6 +56,12 @@ app.get("/hspa/ui/search", (request, response) =>
 	hspaUISearch(request, response)
 );
 
+// HSPA - Search
+const hspaUIDispatch = require("./routes/hspa.ui.dispatch");
+app.put("/hspa/ui/dispatch/:id", (request, response) =>
+	hspaUIDispatch(request, response)
+);
+
 // Run Server
 app.listen(process.env.PORT || port, () => {
 	console.log(`Example app listening on port ${port}`);
