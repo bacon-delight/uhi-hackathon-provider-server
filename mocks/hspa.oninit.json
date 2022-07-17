@@ -6,46 +6,13 @@
 				"price": {
 					"currency": "INR",
 					"value": "1000"
-				},
-				"breakup": [
-					{
-						"title": "Fuel",
-						"price": {
-							"currency": "1000"
-						}
-					},
-					{
-						"title": "CGST @ 5%",
-						"price": {
-							"currency": "1000"
-						}
-					},
-					{
-						"title": "SGST @ 5%",
-						"price": {
-							"currency": "1000"
-						}
-					},
-					{
-						"title": "Transportation",
-						"price": {
-							"currency": "1000"
-						}
-					}
-				]
-			},
-			"payment": [
-				{
-					"uri": "https://api.bpp.com/pay?amt=100&txn_id=ksh87yriuro34iyr3p4&mode=upi&karkinos@upi",
-					"type": "ON-ORDER",
-					"status": "NOT-PAID"
-				},
-				{
-					"uri": "https://api.bpp.com/pay?amt=100&txn_id=ksh87yriuro34iyr3p4&mode=upi&karkinos@upi",
-					"type": "ON-FULFILLMENT",
-					"status": "NOT-PAID"
 				}
-			]
+			},
+			"payment": {
+				"uri": "https://api.bpp.com/pay?amt=100&txn_id=ksh87yriuro34iyr3p4&mode=upi&karkinos@upi",
+				"type": "ON-ORDER",
+				"status": "NOT-PAID"
+			}
 		}
 	}
 }
