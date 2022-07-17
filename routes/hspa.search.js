@@ -17,9 +17,9 @@ module.exports = async function (request, response) {
 	// Not Serviced
 	if (
 		!(
-			request.body.message?.intent?.fulfillment?.type !==
+			request.body.message?.intent?.fulfillment?.type ===
 				"EMERGENCY-PICKUP" ||
-			request.body.message?.intent?.fulfillment?.type !== "DROP"
+			request.body.message?.intent?.fulfillment?.type === "DROP"
 		)
 	) {
 		response.json({ accepted: false, reason: "not_serviced" });
