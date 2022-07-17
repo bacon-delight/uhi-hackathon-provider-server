@@ -12,6 +12,7 @@ const searchResponse = require("../mocks/hspa.onsearch.json");
 const hspaProviderDetailsCollection =
 	hspaDatabase.collection("provider_details");
 const hspaSearchCollection = hspaDatabase.collection("search");
+const transactions = hspaDatabase.collection("transactions");
 
 module.exports = async function (request, response) {
 	// Not Serviced
@@ -73,9 +74,43 @@ module.exports = async function (request, response) {
 		});
 
 	const entry = {
-		patient_name: "Patient",
-		phone_number: "phone",
-		transaction_id: "1208124812",
+		search_timestamp: searchResponse.context.timestamp,
+		patient_name:
+			request.body.message?.intent?.fulfillment?.start?.contact?.tags?.[
+				"@abdm/gov/in/name"
+			] || "Unknown",
+		phone_number:
+			parseInt(
+				request.body.message?.intent?.fulfillment?.start?.contact?.phone
+			) || null,
+		_id: request.body.context.transaction_id,
+		pickup_time:
+			request.body.message?.intent?.fulfillment?.start?.time?.timestamp ||
+			null,
+		status: "pending",
+		blood_group:
+			request.body.message?.intent?.fulfillment?.tags?.[
+				"@abdm/gov/in/bloodgroup"
+			].toUpperCase() || null,
+		request_type: request.body.message?.intent?.fulfillment?.type || null,
+		pickup_coordinates: {
+			latitude:
+				request.body.message?.intent?.fulfillment?.start?.contact
+					?.tags?.["@abdm/gov/in/lat"] || null,
+			longitude:
+				request.body.message?.intent?.fulfillment?.start?.contact
+					?.tags?.["@abdm/gov/in/long"] || null,
+		},
+		drop_coordinates: {
+			latitude:
+				request.body.message?.intent?.fulfillment?.end?.contact?.tags?.[
+					"@abdm/gov/in/lat"
+				] || null,
+			longitude:
+				request.body.message?.intent?.fulfillment?.end?.contact?.tags?.[
+					"@abdm/gov/in/long"
+				] || null,
+		},
 	};
 
 	// Respond
@@ -86,6 +121,7 @@ module.exports = async function (request, response) {
 			response: searchResponse,
 			status: status,
 		});
+		await transactions.insertOne(entry);
 	} catch {
 		response.json({
 			accepted: false,

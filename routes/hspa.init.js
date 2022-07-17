@@ -12,6 +12,7 @@ const searchResponse = require("../mocks/hspa.oninit.json");
 const hspaProviderDetailsCollection =
 	hspaDatabase.collection("provider_details");
 const hspaInitCollection = hspaDatabase.collection("init");
+const transactions = hspaDatabase.collection("transactions");
 
 module.exports = async function (request, response) {
 	const context = await hspaProviderDetailsCollection.findOne({
@@ -31,6 +32,22 @@ module.exports = async function (request, response) {
 		payment: searchResponse.message.order.payment,
 		...requestMessage,
 	};
+
+	// Update Transaction
+	const transaction = await transactions.findOne({
+		_id: request.body.context.transaction_id,
+	});
+	if (transaction !== null) {
+		transaction.status = "initiated";
+		transaction.payment = {
+			amount: searchResponse.message.order.quote.price,
+		};
+		transaction.fulfillment_type = "basic_life_support";
+		transactions.updateOne(
+			{ _id: request.body.context.transaction_id },
+			{ $set: transaction }
+		);
+	}
 
 	let status = null;
 	const uhiRequest = await axios

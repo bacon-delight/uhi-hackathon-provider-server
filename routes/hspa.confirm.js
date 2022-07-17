@@ -12,6 +12,7 @@ const searchResponse = require("../mocks/hspa.oninit.json");
 const hspaProviderDetailsCollection =
 	hspaDatabase.collection("provider_details");
 const hspaConfirmCollection = hspaDatabase.collection("confirm");
+const transactions = hspaDatabase.collection("transactions");
 
 module.exports = async function (request, response) {
 	const context = await hspaProviderDetailsCollection.findOne({
@@ -49,6 +50,24 @@ module.exports = async function (request, response) {
 		"@abdm/gov/in/driverPhoneNumber": "8437273627",
 		"@abdm/gov/in/otp": "3847",
 	};
+
+	// Update Transaction
+	const transaction = await transactions.findOne({
+		_id: request.body.context.transaction_id,
+	});
+	if (transaction !== null) {
+		transaction.status = "confirmed";
+		transaction.dispatch = {
+			driver_name: "Prakhya Shastry",
+			registration_number: "KA 03 MW 1151",
+			phone_number: 8437273627,
+			otp: 3857,
+		};
+		transactions.updateOne(
+			{ _id: request.body.context.transaction_id },
+			{ $set: transaction }
+		);
+	}
 
 	let status = null;
 	const uhiRequest = await axios

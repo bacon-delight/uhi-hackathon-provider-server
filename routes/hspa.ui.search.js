@@ -3,9 +3,9 @@ const mongo = require("../mongo");
 const hspaDatabase = mongo.db("hspa");
 
 // Collections
-const hspaSearchCollection = hspaDatabase.collection("search");
+const transactions = hspaDatabase.collection("transactions");
 
 module.exports = async function (request, response) {
-	const context = await hspaSearchCollection.find().toArray();
+	const context = await transactions.find().toArray();
 	response.json(context);
 };
