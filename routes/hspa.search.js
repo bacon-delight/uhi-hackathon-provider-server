@@ -72,6 +72,12 @@ module.exports = async function (request, response) {
 			status = "broadcasted_failed";
 		});
 
+	const entry = {
+		patient_name: "Patient",
+		phone_number: "phone",
+		transaction_id: "1208124812",
+	};
+
 	// Respond
 	try {
 		await hspaSearchCollection.insertOne({

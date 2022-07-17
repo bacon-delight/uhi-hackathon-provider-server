@@ -43,6 +43,13 @@ module.exports = async function (request, response) {
 		...requestMessage,
 	};
 
+	searchResponse.message.order.fulfillment.agent.tags = {
+		"@abdm/gov/in/driverName": "Prakhya Shastry",
+		"@abdm/gov/in/registrationNumber": "KA 03 MW 1151",
+		"@abdm/gov/in/driverPhoneNumber": "8437273627",
+		"@abdm/gov/in/otp": "3847",
+	};
+
 	let status = null;
 	const uhiRequest = await axios
 		.post(
