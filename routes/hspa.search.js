@@ -14,6 +14,18 @@ const hspaProviderDetailsCollection =
 const hspaSearchCollection = hspaDatabase.collection("search");
 
 module.exports = async function (request, response) {
+	// Not Serviced
+	if (
+		!(
+			request.body.message?.intent?.fulfillment?.type !==
+				"EMERGENCY-PICKUP" ||
+			request.body.message?.intent?.fulfillment?.type !== "DROP"
+		)
+	) {
+		response.json({ accepted: false, reason: "not_serviced" });
+	}
+
+	// Respond
 	const context = await hspaProviderDetailsCollection.findOne({
 		_id: "context",
 	});
@@ -25,14 +37,13 @@ module.exports = async function (request, response) {
 	searchResponse.context.consumer_id = request.body.context.consumer_id;
 	searchResponse.context.consumer_uri = request.body.context.consumer_uri;
 
+	// Descriptor
 	const descriptor = await hspaProviderDetailsCollection.findOne({
 		_id: "descriptor",
 	});
 	searchResponse.message.catalog.descriptor = descriptor.descriptor;
 
-	// const fulfillments = await hspaProviderDetailsCollection.findOne({
-	// 	_id: "fulfillments",
-	// });
+	// Fulfillments
 	searchResponse.message.catalog.fulfillments =
 		request.body.message.intent.fulfillment;
 
@@ -64,11 +75,21 @@ module.exports = async function (request, response) {
 		});
 
 	// Respond
-	await hspaSearchCollection.insertOne({
-		_id: searchResponse.context.transaction_id,
-		request: request.body,
-		response: searchResponse,
-		status: status,
+	try {
+		await hspaSearchCollection.insertOne({
+			_id: searchResponse.context.transaction_id,
+			request: request.body,
+			response: searchResponse,
+			status: status,
+		});
+	} catch {
+		response.json({
+			accepted: false,
+			reason: "duplicate",
+		});
+	}
+
+	response.json({
+		accepted: true,
 	});
-	response.json(searchResponse);
 };
