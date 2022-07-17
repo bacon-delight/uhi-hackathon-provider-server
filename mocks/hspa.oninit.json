@@ -9,7 +9,7 @@
 				},
 				"breakup": [
 					{
-						"title": "Consultation",
+						"title": "Fuel",
 						"price": {
 							"currency": "1000"
 						}
@@ -27,7 +27,7 @@
 						}
 					},
 					{
-						"title": "Registration",
+						"title": "Transportation",
 						"price": {
 							"currency": "1000"
 						}
