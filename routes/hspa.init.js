@@ -15,6 +15,7 @@ const hspaInitCollection = hspaDatabase.collection("init");
 const transactions = hspaDatabase.collection("transactions");
 
 module.exports = async function (request, response) {
+	
 	const context = await hspaProviderDetailsCollection.findOne({
 		_id: "context",
 	});
@@ -28,10 +29,25 @@ module.exports = async function (request, response) {
 
 	const requestMessage = request.body.message.order;
 	searchResponse.message.order = {
-		quote: searchResponse.message.order.quote,
 		payment: searchResponse.message.order.payment,
 		...requestMessage,
+		quote: request.body.message.order.item.price
 	};
+
+	var fullfillmentType;
+	if(request.body.message.order.item.price.value === "4000"){
+		
+		fullfillmentType="advanced_life_support";
+	}
+	if(request.body.message.order.item.price.value === "3000"){
+		fullfillmentType="basic_life_support";
+	}
+	if(request.body.message.order.item.price.value === "2000"){
+		fullfillmentType="patient_transfer";
+	}
+	if(request.body.message.order.item.price.value === "1000"){
+		fullfillmentType="mortuary";
+	}
 
 	// Update Transaction
 	const transaction = await transactions.findOne({
@@ -42,7 +58,7 @@ module.exports = async function (request, response) {
 		transaction.payment = {
 			amount: searchResponse.message.order.quote.price,
 		};
-		transaction.fulfillment_type = "basic_life_support";
+		transaction.fulfillment_type = fullfillmentType || null;
 		transactions.updateOne(
 			{ _id: request.body.context.transaction_id },
 			{ $set: transaction }
@@ -60,6 +76,8 @@ module.exports = async function (request, response) {
 		.catch((error) => {
 			status = "broadcasted_failed";
 		});
+
+	console.log("after")
 
 	// Respond
 	await hspaInitCollection.insertOne({

@@ -2,7 +2,9 @@ const express = require("express");
 const uuid = require("uuid");
 const app = express();
 const cors = require("cors");
+var logger = require('morgan');
 app.use(cors());
+app.use(logger('dev'));
 app.use(express.json());
 const port = 4000;
 

@@ -111,6 +111,7 @@ module.exports = async function (request, response) {
 					"@abdm/gov/in/long"
 				] || null,
 		},
+		location: "Hauz Khas"
 	};
 
 	// Respond
